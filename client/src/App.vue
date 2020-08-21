@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <b-nav class="nav-padding"></b-nav>
-    <b-nav
-      class="nav justify-content-center bg-white align-content-center shadow-sm"
-    >
+    <b-nav class="nav justify-content-center align-content-center shadow">
       <div class="d-flex container justify-content-center">
-        <b-nav-item><span class="balance text-dark">Rp.{{currentMoney}}</span></b-nav-item>
+        <b-nav-item
+          ><span class="balance">Rp.{{ currentMoney }}</span></b-nav-item
+        >
       </div>
     </b-nav>
     <router-view />
@@ -17,10 +17,9 @@ export default {
   name: 'App',
   computed: {
     currentMoney() {
-      return this.$store.state.money
-    }
+      return this.$store.state.money;
+    },
   },
-  
 };
 </script>
 
@@ -44,6 +43,7 @@ div {
   right: 0;
   bottom: auto;
   z-index: 1;
+  background-color: #b3ddff;
 }
 
 .nav-padding {
@@ -54,5 +54,6 @@ div {
 .balance {
   font-size: x-large;
   font-weight: 400;
+  color: #e59d3e;
 }
 </style>

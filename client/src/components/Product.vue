@@ -1,5 +1,5 @@
 <template>
-  <div class="col-3 mb-4" >
+  <div class="col-3 mb-4">
     <b-card>
       <b-card-text>
         <img
@@ -7,6 +7,7 @@
           :src="`http://localhost:3000${product.imgUrl}`"
           height="140"
         />
+        <h5 class="mt-3">{{ product.name }}</h5>
         <div>{{ product.price }}</div>
         <div>Stock: {{ product.stock }}</div>
       </b-card-text>
@@ -25,8 +26,8 @@ export default {
   props: ['product'],
   methods: {
     // buy(id) {
-      // socket.emit('buy', id);
-      // this.$store.dispatch('buy', id);
+    // socket.emit('buy', id);
+    // this.$store.dispatch('buy', id);
     // },
   },
   watch: {

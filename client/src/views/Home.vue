@@ -50,7 +50,7 @@ export default {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: top;
-  height: 100vh;
+  height: 60vh;
 }
 
 .heading1 {
