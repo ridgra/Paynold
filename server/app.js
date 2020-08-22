@@ -1,26 +1,28 @@
 const express = require('express');
-const cors = require('cors');
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const server = require('http').createServer(app);
 const port = process.env.PORT || 3000;
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-});
+const io = require('socket.io')(server);
 
 app.use(express.static('public'));
-app.use(express.urlencoded({ extended: false }));
-app.use(cors());
-app.use(express.static('public'));
-app.use(express.json());
 
-const payloads = require('./payloads.json');
+const products = require('./products');
+let balance = 100000000000000;
 
-app.get('/', (req, res) => {
-  res.status(200).json(payloads);
+io.on('connect', (socket) => {
+  socket.emit('payload', { products, balance });
+
+  socket.on('upPayload', (id) => {
+    const idx = products.findIndex((e) => e.id == id);
+    const isSafe = balance - products[idx].price;
+    if (products[idx].stock > 0 && isSafe > 0) {
+      products[idx].stock--;
+      balance -= products[idx].price;
+      socket.broadcast.emit('upPayloadBroadcast', id);
+    }
+  });
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+server.listen(port, () => {
+  console.log(`listenning on port ${port}`);
 });

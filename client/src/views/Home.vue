@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <Nav />
     <div class="welcome row">
       <div class="col-6"></div>
       <div class="col-6 d-flex flex-column justify-content-center my-5">
@@ -11,37 +12,49 @@
         <div class="heading3">Penawaran terbatas, hanya hari ini!</div>
       </div>
     </div>
-    <!-- <router-view/> -->
     <div class="products justify-content-center mt-5">
       <b-card-group deck class="container justify-content-center text-center">
-        <Product v-for="product in products" :key="product.id" :product=product></Product>
+        <Product
+          v-for="product in products"
+          :key="product.id"
+          :product="product"
+          @sendId="sendId"
+        ></Product>
       </b-card-group>
     </div>
+    <hr />
+    <Receipt :purchasedId="purchasedId" />
   </div>
 </template>
 
 <script>
-
+import Nav from '@/components/Nav.vue';
 import Product from '@/components/Product.vue';
-// import socket from '../socket'
+import Receipt from '@/components/Receipt.vue';
 
 export default {
   name: 'Home',
-  components: { Product },
-  computed: {
-    products () {
-      return this.$store.state.products
-    }
+  components: { Nav, Product, Receipt },
+  data() {
+    return {
+      payload: '',
+      purchasedId: 0,
+    };
   },
-  created () {
-    this.$store.dispatch('fetchProducts')
-
-    // socket.emit('fetchProducts')
-    // socket.on('products', (data) => {
-    //   this.$store.dispatch('getProduct', data)
-    // })
-  }
-
+  computed: {
+    products() {
+      return this.$store.state.products;
+    },
+  },
+  mounted() {
+    this.$store.dispatch('fetchProducts');
+    this.$store.dispatch('upPayloadBroadcast');
+  },
+  methods: {
+    sendId(id) {
+      this.purchasedId = id;
+    },
+  },
 };
 </script>
 <style>
@@ -63,4 +76,7 @@ export default {
   color: #e59d3e;
 }
 
+.total {
+  color: #e59d3e;
+}
 </style>

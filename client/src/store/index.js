@@ -1,41 +1,52 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import axios from "axios";
+import io from 'socket.io-client';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    money: 1000000000,
+    balance: 0,
     products: [],
-    purchased: [],
+    purchased: '',
   },
   mutations: {
-    setProducts(state, payload) {
-      state.products = payload;
+    setPayload(state, payload) {
+      state.products = payload.products;
+      state.balance = payload.balance;
     },
-    setPurchased(state, id) {
-      state.products.forEach((product) => {
-        if (product.id === id) {
-          state.money -= product.price;
-          state.total += product.price;
-        }
-      });
+    updateProduct(state, id) {
+      const idx = state.products.findIndex((e) => e.id == id);
+      const isSafe = state.balance - state.products[idx].price;
+      if (state.products[idx].stock > 0 && isSafe > 0) {
+        state.products[idx].stock--;
+        state.balance -= state.products[idx].price;
+        state.purchased = id;
+        this.socket.emit('upPayload', id);
+      }
+    },
+    upPayloadBroadcast(state, id) {
+      const idx = state.products.findIndex((e) => e.id == id);
+      if (state.products[idx].stock > 0) {
+        state.products[idx].stock--;
+        state.balance -= state.products[idx].price;
+      }
     },
   },
   actions: {
-    async fetchProducts(context) {
-      try {
-        const { data } = await axios({
-          url: `http://localhost:3000`,
-        });
-        context.commit('setProducts', data);
-      } catch (err) {
-        console.log(err.response);
-      }
+    fetchProducts(context) {
+      this.socket = io.connect('http://localhost:3000');
+      this.socket.on('payload', (payload) => {
+        context.commit('setPayload', payload);
+      });
     },
-    buy(context, data) {
-      context.commit('setPurchased', data);
+    buy(context, id) {
+      context.commit('updateProduct', id);
+    },
+    upPayloadBroadcast(context) {
+      this.socket.on('upPayloadBroadcast', (id) => {
+        context.commit('upPayloadBroadcast', id);
+      });
     },
   },
 });

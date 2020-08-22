@@ -5,7 +5,7 @@ class Product {
     this.id = id;
     this.name = name;
     this.price = price * 1e4;
-    this.stock = Math.ceil(Math.random() * (data.length - id)*2);
+    this.stock = Math.ceil(Math.random() * (data.length + 1 - id) * 2);
     this.imgUrl = imgUrl;
   }
 }
@@ -13,8 +13,7 @@ class Product {
 const products = [];
 
 const data = [
-  [0, 'Big Mac', 2],
-  // [1, 'Flip Flops', 3],
+  [1, 'Big Mac', 2],
   [2, 'Coca-Cola Pack', 5],
   [3, 'Movie Ticket', 12],
   [4, 'Book', 15],
@@ -64,6 +63,4 @@ data.forEach((el) => {
   products.push(new Product(el[0], el[1], el[2], `/images/img-${el[0]}.jpg`));
 });
 
-// console.log(payloads);
-
-fs.writeFileSync('./payloads.json',JSON.stringify(products, null, 2))
+module.exports = products;
