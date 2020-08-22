@@ -35,7 +35,11 @@ export default new Vuex.Store({
   },
   actions: {
     fetchProducts(context) {
-      this.socket = io.connect('http://localhost:3000');
+      if (process.env.NODE_ENV === 'production') {
+        this.socket = io.connect('https://paynold.herokuapp.com');
+      } else {
+        this.socket = io.connect('http://localhost:3000');
+      }
       this.socket.on('payload', (payload) => {
         context.commit('setPayload', payload);
       });

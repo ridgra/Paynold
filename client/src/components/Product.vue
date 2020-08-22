@@ -2,11 +2,7 @@
   <div class="col-3 mb-4">
     <b-card>
       <b-card-text>
-        <img
-          class="card-img"
-          :src="`http://localhost:3000${product.imgUrl}`"
-          height="140"
-        />
+        <img class="card-img" :src="imgSrc" height="140" />
         <h5 class="mt-3">{{ product.name }}</h5>
         <div class="font-weight-normal font">
           {{ formatter(product.price) }}
@@ -34,6 +30,13 @@ export default {
     return {
       purchased: '',
     };
+  },
+  computed: {
+    imgSrc() {
+      return process.env.NODE_ENV === 'production'
+        ? `https://paynold.herokuapp.com${this.product.imgUrl}`
+        : `http://localhost:3000${this.product.imgUrl}`;
+    },
   },
   methods: {
     buy(id) {
