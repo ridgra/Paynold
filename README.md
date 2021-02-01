@@ -12,7 +12,7 @@
 **Features:**
 
 - **Vue** to build a single page app
-- **Vuex** to fetch backend data and state management
+- **Vuex** to store fetched backend data and state management
 - **Socket.IO** enables real-time, bidirectional and event-based communication.
 
 ## Back-End
